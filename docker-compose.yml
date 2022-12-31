@@ -1,0 +1,23 @@
+version: '3'
+services:
+  batch_container:
+    container_name: batch-container
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - type: volume # volumeとして作成する
+        source: "dirvol"
+        target: "/batch_files/dirvol"
+      - type: bind # bindとして作成する(既に存在するディレクトリをsourceにする)
+        source: "./batch_files/dirbind"
+        target: "/batch_files/dirbind"
+      - type: bind # bindとして作成する(まだ存在しないディレクトリをsourceにする)
+        source: "./batch_files/dirbind_after"
+        target: "/batch_files/dirbind_after"
+    command: sh ./lsla.sh # 作成したディレクトリやファイルの内容を参照する処理
+    # tty: true
+    # command: sh -c "/bin/sh" # docker-compose up のあとコンテナにAttachして中身を確認したいとき用
+
+volumes:
+  dirvol:
